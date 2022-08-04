@@ -18,6 +18,20 @@ class App extends Component {
     filter: '',
   };
 
+  componentDidMount() {
+    const savedContacts = localStorage.getItem("contacts");
+    const parsedContacts = JSON.parse(savedContacts);
+    if (parsedContacts) {
+      this.setState({contacts:parsedContacts})
+    }
+  }
+  componentDidUpdate(_, prevState) {
+    const { contacts } = this.state;
+    if (prevState.contacts !== contacts) {
+      localStorage.setItem('contacts', JSON.stringify(contacts))
+    }
+  }
+
   formSubmitHandler = data => {
     // checking name for matches
     const { contacts } = this.state;
@@ -30,6 +44,8 @@ class App extends Component {
       alert(`${data.name} is already in contacts.`);
       return;
     }
+
+    
 
     // add new contact
     const newData = { id: nanoid(5), ...data };
